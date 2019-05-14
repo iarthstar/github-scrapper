@@ -1,0 +1,28 @@
+{
+  "name": "github-scrapper",
+  "version": "1.0.0",
+  "description": "Scrapes issues for the provided github repo",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Arth K. Gajjar",
+    "email": "iarthstar@gmail.com",
+    "url": "https://github.com/iarthstar"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iarthstar/github-scrapper.git"
+  },
+  "private": false,
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "cheerio": "^1.0.0-rc.3",
+    "colors": "^1.3.2",
+    "express": "^4.16.3"
+  }
+}
