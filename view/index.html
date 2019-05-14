@@ -6,11 +6,35 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
+    <style>
+        body {
+            background-color: whitesmoke;
+        }
+
+        .parent {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .child {
+            margin: auto;
+        }
+
+        .mdl-card {
+            width: 100%;
+            border-radius: 4px;
+        }
+    </style>
+
 </head>
 
 <body>
-
-
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
@@ -23,13 +47,74 @@
         </div>
         <main class="mdl-layout__content">
             <div class="page-content">
-                <!-- content goes here -->
 
-                
+
+                <!-- Search Box -->
+                <div id="search-box" class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--4-col-desktop mdl-cell--1-col-tablet mdl-cell--0-col-phone"></div>
+                    <div
+                        class="mdl-cell mdl-cell--stretch mdl-cell--4-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+
+                        <div class="mdl-card mdl-shadow--4dp">
+                            <div id="loader" class="parent">
+                                <div class="mdl-spinner mdl-js-spinner is-active child"></div>
+                            </div>
+                            <div class="mdl-card__media">
+                                <img src="https://images.unsplash.com/photo-1556075798-4825dfaaf498?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1055&q=80"
+                                    style="width: 100%; object-fit: cover;" alt="">
+                            </div>
+                            <div class="mdl-card__supporting-text">
+                                Enter the github repo url below
+                            </div>
+                            <div class="mdl-card__supporting-text">
+                                <form>
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                        <input class="mdl-textfield__input" type="text" id="repo-url"
+                                            autocomplete="off">
+                                        <label class="mdl-textfield__label" for="repo-url">Repo URL</label>
+                                    </div>
+                                    <br><br>
+                                    <button
+                                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                        SCRAPE
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="mdl-cell mdl-cell--4-col-desktop mdl-cell--1-col-tablet mdl-cell--0-col-phone"></div>
+                </div>
+
+
+                <!-- Todo : Issue Box -->
 
             </div>
         </main>
     </div>
+
+    <script>
+        /**
+         * Toggles visibility of provided HTML dom selector
+         * @param {selector} HTML dom selector
+         * @param {toggle} Boolean
+         */
+        function toggleVisibility(selector, toggle) {
+            let selection = document.querySelector(selector);
+            if (toggle)
+                selection.style.display = "flex";
+            else
+                selection.style.display = "none";
+        }
+
+        /**
+         * Window onLoad method
+         * toggles visibility of loader as required assets and scripts are loaded
+         */
+        window.addEventListener('load', function () {
+            toggleVisibility('#loader', false);
+        });
+    </script>
 </body>
 
 </html>
