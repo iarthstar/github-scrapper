@@ -22,6 +22,9 @@ const port = process.env.PORT || 8080;
 const express = require('express');
 const bodyParser = require('body-parser');
 
+//routes import
+const issues = require('./routes/issues');
+
 // modules init
 const app = express();
 
@@ -46,6 +49,8 @@ app.listen(port, () => {
 app.get('/', (req, res) => {
     res.sendStatus(200);
 });
+
+app.use('/',issues);
 
 //
 // ─────────────────────────────────────────────────────────────────────────
