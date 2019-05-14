@@ -32,7 +32,7 @@ router.post('/issues', (req, res) => {
     let links = [];
 
     axios.get(link)
-        .then((response) => {
+        .then(async (response) => {
             let $ = cheerio.load(response.data);
 
             let issuesStr = $(`a[href="${link.split('github.com')[1]}"]`).find('span[class="Counter"]').text();
@@ -52,7 +52,24 @@ router.post('/issues', (req, res) => {
                         links.push(`https://github.com${$(e).attr('href')}`);
                     });
 
-                    // Todo : Scrape pages
+                    // SCRAPING PAGES
+                    await Promise.all(
+                        links.map(link => {
+                            return new Promise((resolve, reject) => {
+                                axios.get(link)
+                                    .then((response) => {
+                                        let $ = cheerio.load(response.data);
+
+                                        let issueNodes = $('div[id^=issue_]');
+                                        issuesArray = [...issuesArray, ...scrapeIssues($, issueNodes)];
+
+                                        resolve();
+                                    }).catch((err) => {
+                                        reject();
+                                    });
+                            })
+                        })
+                    );
                 }
             }
 
@@ -60,7 +77,7 @@ router.post('/issues', (req, res) => {
             res.send({
                 success: true,
                 data: {
-                    issues: issuesArray
+                    issues: issuesArray.length
                 }
             });
         }).catch((error) => {
