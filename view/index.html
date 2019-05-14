@@ -79,8 +79,10 @@
                                 <form>
                                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                         <input class="mdl-textfield__input" type="text" id="repo-url"
+                                            pattern="(((http)|(https)|())(:\/\/)(www.)*)*(github.com\/)(.+)(\/)(.+)(\/*)"
                                             autocomplete="off">
                                         <label class="mdl-textfield__label" for="repo-url">Repo URL</label>
+                                        <span class="mdl-textfield__error">Incorrect github repo url...</span>
                                     </div>
                                     <br><br>
                                     <button id="submit-url"
@@ -102,6 +104,9 @@
                     <div
                         class="mdl-cell mdl-cell--stretch mdl-cell--8-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
                         <div class="mdl-card mdl-shadow--4dp">
+                            <div class="mdl-card__supporting-text">
+                                Issues scrapped from repo : <strong>{{repoName}}</strong>
+                            </div>
                             <div class="mdl-card__supporting-text">
                                 <table class="mdl-data-table mdl-js-data-table">
                                     <thead>
@@ -175,6 +180,7 @@
         /*----------- Angular Controller -----------*/
         let app = angular.module('github-issues', []);
         app.controller('github-issues-ctrl', function ($scope, $filter) {
+            $scope.repoName = "";
             $scope.yesterday = 0;
             $scope.lastWeek = 0;
             $scope.other = 0;
@@ -184,58 +190,64 @@
         /*----------- Global Variables Init -----------*/
         let submitButton = document.querySelector('#submit-url');
         let repoUrl = document.querySelector('#repo-url');
+        let githubRegex = new RegExp(repoUrl.pattern);
 
 
         /*----------- Submit Repo URL Flow -----------*/
         submitButton.addEventListener('click', (event) => {
-            event.preventDefault();
-            toggleVisibility('#loader', true);
-            axios.post("/issues", {
-                link: repoUrl.value.trim()
-            }).then(response => {
-                if (response.data.success) {
-                    let now = new Date();
-                    let yesterday = 0,
-                        lastWeek = 0,
-                        other = 0;
+            // Repo URL Validation check
+            let link = repoUrl.value.trim();
+            if (!githubRegex.test(link)) {
 
-                    // Transforming issues as per requirement
-                    response.data.data.issues.forEach(elem => {
-                        let yesterday = now;
-                        let lastWeek = now;
-                        yesterday.setDate(now.getDate() - 1);
-                        lastWeek.setDate(now.getDate() - 7);
-                        if (new Date(elem.datetime) > yesterday) {
-                            yesterday++;
-                        } else if (new Date(elem.datetime) > lastWeek && new Date(elem
-                                .datetime) <= yesterday) {
-                            lastWeek++;
-                        } else {
-                            other++;
-                        }
-                    });
+            } else {
+                let repoName = link.endsWith('/') ? link.split("/").slice(-2, -1)[0] : link.split("/").slice(-1)[0];
+                event.preventDefault();
+                toggleVisibility('#loader', true);
+                axios.post("/issues", {
+                    link: link
+                }).then(response => {
+                    if (response.data.success) {
+                        let now = new Date();
+                        let yesterday = 0,
+                            lastWeek = 0,
+                            other = 0;
 
-                    // Updating angular scope
-                    let $angScope = getScope('github-issues-ctrl');
-                    $angScope.repo = response.data.data.repo;
-                    $angScope.yesterday = yesterday;
-                    $angScope.lastWeek = lastWeek;
-                    $angScope.other = other;
-                    $angScope.$apply();
+                        // Transforming issues as per requirement
+                        response.data.data.issues.forEach(elem => {
+                            let yesterday = now;
+                            let lastWeek = now;
+                            yesterday.setDate(now.getDate() - 1);
+                            lastWeek.setDate(now.getDate() - 7);
+                            if (new Date(elem.datetime) > yesterday) {
+                                yesterday++;
+                            } else if (new Date(elem.datetime) > lastWeek && new Date(elem.datetime) <= yesterday) {
+                                lastWeek++;
+                            } else {
+                                other++;
+                            }
+                        });
 
-                    // Updating visibility 
-                    toggleVisibility('#issue-box', true);
-                    toggleVisibility('#loader', false);
+                        // Updating angular scope
+                        let $angScope = getScope('github-issues-ctrl');
+                        $angScope.repoName = repoName;
+                        $angScope.yesterday = yesterday;
+                        $angScope.lastWeek = lastWeek;
+                        $angScope.other = other;
+                        $angScope.$apply();
 
-                    // Scrolling down
-                    document.querySelector('main').scrollTo(0, document.querySelector('#issue-box')
-                        .offsetHeight);
-                } else {
-                    toggleVisibility('#loader', false);
-                }
-            }).catch(error => {
-                console.log("Error", error);
-            });
+                        // Updating visibility 
+                        toggleVisibility('#issue-box', true);
+                        toggleVisibility('#loader', false);
+
+                        // Scrolling down
+                        document.querySelector('main').scrollTo(0, document.querySelector('#issue-box').offsetHeight);
+                    } else {
+                        toggleVisibility('#loader', false);
+                    }
+                }).catch(error => {
+                    console.log("Error", error);
+                });
+            }
         });
     </script>
 </body>
