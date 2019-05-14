@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 
 // server init
 app.listen(port, () => {
-    utils.success(`Listening on port ${port}!`);
+    utils.success(`Serving on => http://localhost:${port}`);
 });
 
 //
@@ -47,7 +47,7 @@ app.listen(port, () => {
 //
 
 app.get('/', (req, res) => {
-    res.sendStatus(200);
+    res.sendFile(__dirname + "/view/index.html");
 });
 
 app.use('/',issues);
