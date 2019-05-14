@@ -100,14 +100,14 @@
 
                 <!-- Issue Box -->
                 <div id="issue-box" class="mdl-grid">
-                    <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--1-col-tablet mdl-cell--0-col-phone"></div>
+                    <div class="mdl-cell mdl-cell--4-col-desktop mdl-cell--1-col-tablet mdl-cell--0-col-phone"></div>
                     <div
-                        class="mdl-cell mdl-cell--stretch mdl-cell--8-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+                        class="mdl-cell mdl-cell--stretch mdl-cell--4-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
                         <div class="mdl-card mdl-shadow--4dp">
                             <div class="mdl-card__supporting-text">
                                 Issues scrapped from repo : <strong>{{repoName}}</strong>
-                            </div>
-                            <div class="mdl-card__supporting-text">
+                                <br>Total No. of Issues : <strong>{{yesterday + lastWeek + other}}</strong>
+                                <br><br>
                                 <table class="mdl-data-table mdl-js-data-table">
                                     <thead>
                                         <tr>
@@ -135,7 +135,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mdl-cell mdl-cell--2-col-desktop mdl-cell--1-col-tablet mdl-cell--0-col-phone"></div>
+                    <div class="mdl-cell mdl-cell--4-col-desktop mdl-cell--1-col-tablet mdl-cell--0-col-phone"></div>
                 </div>
 
             </div>
@@ -164,6 +164,9 @@
         window.addEventListener('load', function () {
             toggleVisibility('#loader', false);
             toggleVisibility('#issue-box', false);
+
+            repoUrl.value = "https://github.com/hundredrabbits/Orca";
+            componentHandler.upgradeDom();
         });
 
 
