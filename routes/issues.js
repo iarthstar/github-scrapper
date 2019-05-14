@@ -77,7 +77,7 @@ router.post('/issues', (req, res) => {
             res.send({
                 success: true,
                 data: {
-                    issues: issuesArray.length
+                    issues: issuesArray
                 }
             });
         }).catch((error) => {
