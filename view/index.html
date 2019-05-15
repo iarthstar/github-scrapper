@@ -210,32 +210,14 @@
                     link: link
                 }).then(response => {
                     if (response.data.success) {
-                        let now = new Date();
-                        let yesterday = 0,
-                            lastWeek = 0,
-                            other = 0;
-
-                        // Transforming issues as per requirement
-                        response.data.data.issues.forEach(elem => {
-                            let yesterday = now;
-                            let lastWeek = now;
-                            yesterday.setDate(now.getDate() - 1);
-                            lastWeek.setDate(now.getDate() - 7);
-                            if (new Date(elem.datetime) > yesterday) {
-                                yesterday++;
-                            } else if (new Date(elem.datetime) > lastWeek && new Date(elem.datetime) <= yesterday) {
-                                lastWeek++;
-                            } else {
-                                other++;
-                            }
-                        });
+                        console.log(response.data);
 
                         // Updating angular scope
                         let $angScope = getScope('github-issues-ctrl');
                         $angScope.repoName = repoName;
-                        $angScope.yesterday = yesterday;
-                        $angScope.lastWeek = lastWeek;
-                        $angScope.other = other;
+                        $angScope.yesterday = response.data.data.yesterday;
+                        $angScope.lastWeek = response.data.data.lastWeek;
+                        $angScope.other = response.data.data.other;
                         $angScope.$apply();
 
                         // Updating visibility 
